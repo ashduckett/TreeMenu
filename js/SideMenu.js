@@ -12,7 +12,6 @@ TreeMenu.prototype.getMenuItems = function() {
     return this.menuItems;
 };
 
-/* This constructor function is used for creating both sub-menu items and root menu items */
 var TreeMenuItem = function(caption, url) {
     this.caption = caption;
     this.url = url;
@@ -25,6 +24,10 @@ TreeMenuItem.prototype.addChild = function(childMenuItem) {
     childMenuItem.parentId = this.id;
     this.children.push(childMenuItem);
 };
+
+TreeMenuItem.prototype.hasChildren = function() {
+    return this.children.length > 0;
+}
 
 TreeMenuItem.prototype.getChildren = function() {
     return this.children;
@@ -58,9 +61,12 @@ var model = [
         
         var subItem1 = new TreeMenuItem("SubItem1", "https://www.ashducket.com");
         var subItem2 = new TreeMenuItem("SubItem2", "https://www.ashducket.com");
+        var subSubItem1 = new TreeMenuItem("Sub Sub item", "https://www.ashducket.com");
+        
+        subItem1.addChild(subSubItem1);
+        
         treeMenuItem1.addChild(subItem1);
         treeMenuItem1.addChild(subItem2);
-
 
         var treeMenuItem2 = new TreeMenuItem("Caption 2", "https://www.ashducket.com");
         var treeMenuItem3 = new TreeMenuItem("Caption 3", "https://www.ashducket.com");
@@ -100,7 +106,7 @@ var model = [
                     }
                 });
 
-                if(element.children.length > 0) {
+                if(element.hasChildren()) {
                     listItem.append(buildList(element.children));
                 }
                 
