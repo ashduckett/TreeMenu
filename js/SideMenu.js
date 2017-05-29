@@ -13,25 +13,14 @@ TreeMenu.prototype.getMenuItems = function() {
 };
 
 /* This constructor function is used for creating both sub-menu items and root menu items */
-var TreeMenuItem = function(caption, url, parentId, isRoot) {
+var TreeMenuItem = function(caption, url) {
     this.caption = caption;
     this.url = url;
-    //this.parentId = parentId;
     this.children = [];
-
     this.id = currentId++;
-    
-    // This isn't part of the model. Can it go here?
-    this.childDOMUL = [];
 };
 
 TreeMenuItem.prototype.addChild = function(childMenuItem) {
-    // This is where the id should be set on THIS object.
-
-    // You can know if you're adding to the root
-
-
-    // You should be able to set the parent id here.
     childMenuItem.parentId = this.id;
     this.children.push(childMenuItem);
 };
@@ -69,20 +58,18 @@ var model = [
         this.css('color', 'white');
 
         var treeMenu = new TreeMenu();
-        var treeMenuItem1 = new TreeMenuItem("Caption 1", "https://www.ashducket.com", null, true);
+        var treeMenuItem1 = new TreeMenuItem("Caption 1", "https://www.ashducket.com");
         
-        var subItem1 = new TreeMenuItem("SubItem1", "https://www.ashducket.com", null);
+        var subItem1 = new TreeMenuItem("SubItem1", "https://www.ashducket.com");
         treeMenuItem1.addChild(subItem1);
 
 
-        var treeMenuItem2 = new TreeMenuItem("Caption 2", "https://www.ashducket.com", null, true);
-        var treeMenuItem3 = new TreeMenuItem("Caption 3", "https://www.ashducket.com", null, true);
+        var treeMenuItem2 = new TreeMenuItem("Caption 2", "https://www.ashducket.com");
+        var treeMenuItem3 = new TreeMenuItem("Caption 3", "https://www.ashducket.com");
 
         treeMenu.addMenuItem(treeMenuItem1);
         treeMenu.addMenuItem(treeMenuItem2);
         treeMenu.addMenuItem(treeMenuItem3);
-
-        console.log(treeMenu);
 
         var list = $(document.createElement('ul'));
         list.css('list-style', 'none');
@@ -101,8 +88,7 @@ var model = [
             
             // These are the initial list items.
             listItem.click(function(e) {
-                // This would be prettier with a function hasChildDOMUL, but maybe there's a better way to store elements of the view anyway.
-                if(this === e.target && element.childDOMUL.length > 0) {
+                if(this === e.target && dict[element.id]) {
                     dict[element.id].toggle();
                 }
             });
@@ -120,26 +106,9 @@ var model = [
 
                     subItem.text(element.caption);
                     subList.append(subItem);
-                   
                     listItem.append(subList);
-                
-                    console.log('start');
                     dict[element.parentId] = subList;
-                    console.log(dict);
-                    console.log('end');
                 });
-      
-                // If not in the object where should this be stored?
-                // Should it even be stored?
-                // What's the best way of accessing the UL
-                
-                // What is element here?
-                element.childDOMUL = subList;
-                
-                console.log(dict);
-                // We want to place the UL elements into a dictionary
-                // where we use ?? as the key. The parent id!
-        
             }
             list.append(listItem);
         }, this);
