@@ -18,6 +18,7 @@ var TreeMenuItem = function(caption, url) {
     this.url = url;
     this.children = [];
     this.id = currentId++;
+    this.parentId = null;
 };
 
 TreeMenuItem.prototype.addChild = function(childMenuItem) {
@@ -34,20 +35,15 @@ TreeMenuItem.prototype.getChildren = function() {
 var model = [
     {
         caption: "Swift",
-        subMenuItems: ["Types & Variables", "Loops"],
-        subMenuDOMElement: []
+        subMenuItems: ["Types & Variables", "Loops"]
     },
     {
         caption: "Core Data",
-        subMenuItems: ["The Basic Way", "Subclassing NSManagedObject"],
-        subMenuDOMElement: []
+        subMenuItems: ["The Basic Way", "Subclassing NSManagedObject"]
     }
 ];
 
 (function($) {
-
-
-    // Do you even need a parent id? Could you use a parent id to somehow know what to do on clicking?
     $.fn.sideMenu2 = function() {
         var dict = [];
 
@@ -61,7 +57,9 @@ var model = [
         var treeMenuItem1 = new TreeMenuItem("Caption 1", "https://www.ashducket.com");
         
         var subItem1 = new TreeMenuItem("SubItem1", "https://www.ashducket.com");
+        var subItem2 = new TreeMenuItem("SubItem2", "https://www.ashducket.com");
         treeMenuItem1.addChild(subItem1);
+        treeMenuItem1.addChild(subItem2);
 
 
         var treeMenuItem2 = new TreeMenuItem("Caption 2", "https://www.ashducket.com");
@@ -71,51 +69,44 @@ var model = [
         treeMenu.addMenuItem(treeMenuItem2);
         treeMenu.addMenuItem(treeMenuItem3);
 
- 
-        // Can you code the following in a recursive manner to accommodate an unknown depth of hierarchy?
- 
- 
-        var list = $(document.createElement('ul'));
-        list.css('list-style', 'none');
-        list.css('padding', '0');
-        list.css('margin', '0');
-        list.css('margin-left', '40px');
+        var list = buildList(treeMenu.getMenuItems());
 
-        treeMenu.getMenuItems().forEach(function(element) {
-
-            var listItem = $(document.createElement('li'));
-            listItem.css('font-family', 'Lato');
-            listItem.css('text-transform', 'uppercase');
-            listItem.css('padding-top', '25px');
-            listItem.text(element.caption);
-            listItem.css('cursor', 'pointer');
-            
-            // These are the initial list items.
-            listItem.click(function(e) {
-                if(this === e.target && dict[element.id]) {
-                    dict[element.id].toggle();
-                }
-            });
-
-            if(element.getChildren().length > 0) {
-                var subList = $(document.createElement('ul'));
-                subList.hide();
-                subList.css('list-style', 'none');
-                subList.css('padding', '0');
-                subList.css('margin', '0');
-                subList.css('margin-left', '40px');
-                                
-                element.getChildren().forEach(function(element) {
-                    var subItem = $(document.createElement('li'));
-
-                    subItem.text(element.caption);
-                    subList.append(subItem);
-                    listItem.append(subList);
-                    dict[element.parentId] = subList;
-                });
-            }
-            list.append(listItem);
-        }, this);
         this.append(list);
+
+        function buildList(menuItemList) {
+            
+            // Initially we need a base ul
+            var list = $(document.createElement('ul'));
+            list.css('list-style', 'none');
+            list.css('padding', '0');
+            list.css('margin', '0');
+            list.css('margin-left', '40px');
+
+            menuItemList.forEach(function(element) {
+                var listItem = $(document.createElement('li'));
+                listItem.css('font-family', 'Lato');
+                listItem.css('text-transform', 'uppercase');
+                listItem.css('padding-top', '25px');
+                listItem.text(element.caption);
+                listItem.css('cursor', 'pointer');
+
+                if(element.parentId !== null) {
+                    dict[element.parentId] = list;
+                }
+
+                listItem.click(function(e) {
+                    if(this === e.target && dict[element.id]) {
+                        dict[element.id].toggle();
+                    }
+                });
+
+                if(element.children.length > 0) {
+                    listItem.append(buildList(element.children));
+                }
+                
+                list.append(listItem);
+            });
+            return list;
+        }
     };
 })(jQuery);
