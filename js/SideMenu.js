@@ -83,18 +83,12 @@ var model = [
             
             // Initially we need a base ul
             var list = $(document.createElement('ul'));
-            list.css('list-style', 'none');
-            list.css('padding', '0');
-            list.css('margin', '0');
-            list.css('margin-left', '40px');
-
+            list.addClass('tree-menu-ul');
+            
             menuItemList.forEach(function(element) {
                 var listItem = $(document.createElement('li'));
-                listItem.css('font-family', 'Lato');
-                listItem.css('text-transform', 'uppercase');
-                listItem.css('padding-top', '25px');
+                listItem.addClass('tree-menu-li');
                 listItem.text(element.caption);
-                listItem.css('cursor', 'pointer');
 
                 if(element.parentId !== null) {
                     dict[element.parentId] = list;

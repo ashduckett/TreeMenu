@@ -2,6 +2,21 @@
     box-sizing: border-box;
 }
 
-.side-menu-list {
-    
+.tree-menu-ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-left: 40px;
+}
+
+.tree-menu-li {
+    font-family: 'Lato';    
+    text-transform: uppercase;
+    padding-top: 25px;
+    cursor: pointer;
+
+
+
+
+
 }
