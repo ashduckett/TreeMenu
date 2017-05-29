@@ -71,6 +71,10 @@ var model = [
         treeMenu.addMenuItem(treeMenuItem2);
         treeMenu.addMenuItem(treeMenuItem3);
 
+ 
+        // Can you code the following in a recursive manner to accommodate an unknown depth of hierarchy?
+ 
+ 
         var list = $(document.createElement('ul'));
         list.css('list-style', 'none');
         list.css('padding', '0');
