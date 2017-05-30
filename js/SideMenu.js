@@ -33,16 +33,53 @@ TreeMenuItem.prototype.getChildren = function() {
     return this.children;
 };
 
-/* Items are fixed, they don't need to come from the server */
-
-var model = [
+var fullModel = [
     {
         caption: "Swift",
-        subMenuItems: ["Types & Variables", "Loops"]
+        link: "",
+        subMenuItems: [
+            {
+                caption: "Loops",
+                link: "submenu link",
+                subMenuItems: []
+            },
+            {
+                caption: "Functions",
+                link: "submenu link",
+                subMenuItems: []
+            }
+        ]
+    }, {
+        caption: "Core Data",
+        link: "",
+        subMenuItems: [
+            {
+                caption: "Loops",
+                link: "submenu link",
+                subMenuItems: []
+            },
+            {
+                caption: "Functions",
+                link: "submenu link",
+                subMenuItems: []
+            }
+        ]
     },
     {
-        caption: "Core Data",
-        subMenuItems: ["The Basic Way", "Subclassing NSManagedObject"]
+        caption: "Animation",
+        link: "",
+        subMenuItems: [
+            {
+                caption: "Loops",
+                link: "submenu link",
+                subMenuItems: []
+            },
+            {
+                caption: "Functions",
+                link: "submenu link",
+                subMenuItems: []
+            }
+        ]
     }
 ];
 
@@ -50,30 +87,22 @@ var model = [
     $.fn.sideMenu2 = function() {
         var dict = [];
 
-        // Working
         this.height(500);
         this.width(300);
         this.css('background-color', 'rgb(90, 95, 112)');
         this.css('color', 'white');
 
         var treeMenu = new TreeMenu();
-        var treeMenuItem1 = new TreeMenuItem("Caption 1", "https://www.ashducket.com");
-        
-        var subItem1 = new TreeMenuItem("SubItem1", "https://www.ashducket.com");
-        var subItem2 = new TreeMenuItem("SubItem2", "https://www.ashducket.com");
-        var subSubItem1 = new TreeMenuItem("Sub Sub item", "https://www.ashducket.com");
-        
-        subItem1.addChild(subSubItem1);
-        
-        treeMenuItem1.addChild(subItem1);
-        treeMenuItem1.addChild(subItem2);
+        var menuItems = [];
 
-        var treeMenuItem2 = new TreeMenuItem("Caption 2", "https://www.ashducket.com");
-        var treeMenuItem3 = new TreeMenuItem("Caption 3", "https://www.ashducket.com");
+        fullModel.forEach(function(element) {
+            var menuItem = new TreeMenuItem(element.caption, element.link);
 
-        treeMenu.addMenuItem(treeMenuItem1);
-        treeMenu.addMenuItem(treeMenuItem2);
-        treeMenu.addMenuItem(treeMenuItem3);
+            element.subMenuItems.forEach(function(element) {
+                menuItem.addChild(new TreeMenuItem(element.caption, element.link));
+            });
+            treeMenu.addMenuItem(menuItem);
+        });
 
         var list = buildList(treeMenu.getMenuItems());
 
