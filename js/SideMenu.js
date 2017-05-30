@@ -23,6 +23,14 @@ var TreeMenuItem = function(caption, url) {
 TreeMenuItem.prototype.addChild = function(childMenuItem) {
     childMenuItem.parentId = this.id;
     this.children.push(childMenuItem);
+    return childMenuItem;
+};
+
+TreeMenuItem.prototype.addChildren = function(childrenMenuItems) {
+    for(var i = 0; i < childrenMenuItems.length; i++) {
+        childrenMenuItems[i].parentId = this.id;
+        this.children.push(childrenMenuItems[i]);
+    }
 };
 
 TreeMenuItem.prototype.hasChildren = function() {
@@ -46,7 +54,13 @@ var fullModel = [
             {
                 caption: "Functions",
                 link: "submenu link",
-                subMenuItems: []
+                subMenuItems: [
+                    {
+                        caption: "Functions",
+                        link: "submenu link",
+                        subMenuItems: []
+                    }
+                ]
             }
         ]
     }, {
@@ -87,6 +101,8 @@ var fullModel = [
     $.fn.sideMenu2 = function() {
         var dict = [];
 
+        // I probably shouldn't be dictating the dimensions within the plugin.
+        // Unless I can make it a uniform size based on the text metrics?
         this.height(500);
         this.width(300);
         this.css('background-color', 'rgb(90, 95, 112)');
@@ -95,14 +111,33 @@ var fullModel = [
         var treeMenu = new TreeMenu();
         var menuItems = [];
 
-        fullModel.forEach(function(element) {
-            var menuItem = new TreeMenuItem(element.caption, element.link);
 
-            element.subMenuItems.forEach(function(element) {
-                menuItem.addChild(new TreeMenuItem(element.caption, element.link));
+        var makeList = function(json) {
+
+            var menuItems = [];
+
+
+            json.forEach(function(element) {
+                var menuItem = new TreeMenuItem(element.caption, element.link);    
+                
+
+                if(element.subMenuItems.length > 0) {
+                    menuItem.addChildren(makeList(element.subMenuItems));
+                }
+                
+
+                menuItems.push(menuItem);
             });
-            treeMenu.addMenuItem(menuItem);
-        });
+
+          
+            return menuItems;
+        };
+
+
+
+
+        // This could probably be done better        
+        treeMenu.menuItems = makeList(fullModel);
 
         var list = buildList(treeMenu.getMenuItems());
 
